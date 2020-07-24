@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<com.whitestein.lsps.modeler.form2:Form
+    xmi:version="2.0"
+    xmlns:xmi="http://www.omg.org/XMI"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:com.whitestein.lsps.modeler.form2="http:///com/whitestein/lsps/modeler/form2.ecore"
+    xmi:id="_86te0L6gEemt2PTLWNEIiQ"
+    name="formsmodule">
+  <root
+      xsi:type="com.whitestein.lsps.modeler.form2:FButton"
+      xmi:id="_9xv0gL6gEemt2PTLWNEIiQ">
+    <caption><![CDATA["Demo button"]]></caption>
+    <clickListener><![CDATA[{ e ->
+	debugLog({ -> "Button clicked"});
+}]]></clickListener>
+  </root>
+</com.whitestein.lsps.modeler.form2:Form>

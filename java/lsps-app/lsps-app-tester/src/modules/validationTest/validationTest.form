@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<com.whitestein.lsps.modeler.form:FormDefinition
+    xmi:version="2.0"
+    xmlns:xmi="http://www.omg.org/XMI"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:com.whitestein.lsps.modeler.form="http:///com/whitestein/lsps/modeler/form.ecore"
+    xmi:id="_I-l88IukEeWVb4bAlgb24Q"
+    name="validationTest"
+    newUI="true">
+  <formItem
+      xsi:type="com.whitestein.lsps.modeler.form:NfdLayout"
+      xmi:id="_R-ZwkIukEeWVb4bAlgb24Q">
+    <components
+        xsi:type="com.whitestein.lsps.modeler.form:NfdTextBox"
+        xmi:id="_Q58p8IukEeWVb4bAlgb24Q"
+        componentID="INPUT">
+      <binding><![CDATA[def Integer i;
+&i]]></binding>
+    </components>
+    <components
+        xsi:type="com.whitestein.lsps.modeler.form:NfdButton"
+        xmi:id="_8DSusIukEeWVb4bAlgb24Q"
+        componentID="SUBMIT">
+      <listeners
+          xmi:id="_Pd0i0IunEeWVb4bAlgb24Q"
+          listenerType="ACTION_LISTENER">
+        <persistAction
+            xmi:id="_Pd0i0YunEeWVb4bAlgb24Q">
+          <persistAction></persistAction>
+        </persistAction>
+      </listeners>
+      <text><![CDATA["Submit"]]></text>
+    </components>
+  </formItem>
+</com.whitestein.lsps.modeler.form:FormDefinition>

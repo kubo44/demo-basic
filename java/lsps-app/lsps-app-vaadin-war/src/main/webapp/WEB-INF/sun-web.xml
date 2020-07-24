@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sun-web-app PUBLIC "-//Sun Microsystems, Inc.//DTD Application Server 9.0 Servlet 2.5//EN" "http://www.sun.com/software/appserver/dtds/sun-web-app_2_5-0.dtd">
+<sun-web-app>
+	<session-config>
+		<session-manager persistence-type="replicated">
+			<manager-properties>
+				<property name="persistenceFrequency" value="web-method" />
+				<property name="relaxCacheVersionSemantics" value="true"/>
+			</manager-properties>
+			<store-properties>
+				<property name="persistenceScope" value="session" />
+			</store-properties>
+		</session-manager>
+	</session-config>
+	<parameter-encoding default-charset="UTF-8"/>
+</sun-web-app>

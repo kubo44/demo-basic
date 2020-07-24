@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<com.whitestein.lsps.modeler.form2:Form
+    xmi:version="2.0"
+    xmlns:xmi="http://www.omg.org/XMI"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:com.whitestein.lsps.modeler.form2="http:///com/whitestein/lsps/modeler/form2.ecore"
+    xmi:id="_8qc2APcCEeiQ0Mvisflzog"
+    name="formRoleTest">
+  <root
+      xsi:type="com.whitestein.lsps.modeler.form2:FLayout"
+      xmi:id="_ERtiUPcDEeiQ0Mvisflzog"
+      componentID="top">
+    <components
+        xsi:type="com.whitestein.lsps.modeler.form2:FSimpleComponent"
+        xmi:id="_F5Fv0PcDEeiQ0Mvisflzog"
+        componentID="INPUT">
+      <binding
+          xmi:id="_F5Fv0fcDEeiQ0Mvisflzog">
+        <expression><![CDATA[&content]]></expression>
+      </binding>
+      <caption></caption>
+    </components>
+    <components
+        xsi:type="com.whitestein.lsps.modeler.form2:FButton"
+        xmi:id="_YBOZ4PcDEeiQ0Mvisflzog"
+        componentID="SUBMIT">
+      <caption><![CDATA["Submit"]]></caption>
+      <clickListener><![CDATA[{ e ->
+	if (top.isValid()) then
+		Forms.submit();
+	end;
+}]]></clickListener>
+    </components>
+  </root>
+</com.whitestein.lsps.modeler.form2:Form>

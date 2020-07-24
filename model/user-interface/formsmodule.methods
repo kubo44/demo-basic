@@ -1,0 +1,19 @@
+formsmodule {
+
+	public formsmodule() {
+		// Auto-generated constructor stub
+	}
+
+	private void preCreateWidget() {
+		// This method is called from createWidget method *before* form widgets are created.
+	}
+
+	private void postCreateWidget() {
+		// This method is called from createWidget method *after* form widgets are created.
+	}
+
+	protected void onLoad() {
+		// This method is called only after the form was restored from saved todo or document.
+	}
+
+}

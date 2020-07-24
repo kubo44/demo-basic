@@ -1,0 +1,16 @@
+embed-server --server-config=standalone-full.xml --std-out=echo
+
+batch
+
+# Datasource
+xa-data-source add --jndi-name=java:/jdbc/LSPS_DS --name=LSPS_DS \
+                --xa-datasource-properties=URL="${env.LSPS_JDBC_URL}" \
+                --driver-name=h2 --user-name=${env.LSPS_DB_USER} --password=${env.LSPS_DB_PASSWORD} \
+                --use-java-context="false" \
+                --min-pool-size=10 --max-pool-size=50 --pool-prefill=true \
+                --transaction-isolation=TRANSACTION_READ_COMMITTED \
+				--check-valid-connection-sql="SELECT 1"
+
+run-batch
+
+stop-embedded-server

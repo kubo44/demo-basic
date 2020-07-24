@@ -1,0 +1,42 @@
+//	Here you can override Vaadin Valo variables.
+//	This is a list of overriden values by the LSPS theme with their default values. Just uncomment and change.
+//	Feel free to add override of any other Valo variable here.
+//
+//	Vaadin documentation on Valo variables: https://vaadin.com/book/-/page/themes.valo.html
+
+// $v-font-family: sans-serif;
+// $v-font-size: 13px;
+// $v-focus-color: #498BFE;
+// $v-gradient: 0%;
+// $v-focus-style: 0 0 0 0px $v-focus-color;
+// $v-border-radius: 0px;
+// $v-background-color: hsl(210, 0%, 98%);
+
+// $v-textfield-border-radius: 0px;
+// $v-table-border-color: #ddd;
+// $valo-menu-background-color: #495156;
+
+// $v-layout-margin: 10px;
+
+// $v-layout-margin-top: $v-layout-margin;
+// $v-layout-margin-right: $v-layout-margin;
+// $v-layout-margin-bottom: $v-layout-margin;
+// $v-layout-margin-left: $v-layout-margin;
+
+// // Url of the logo on top of the menu 
+// $l-application-logo: url('../lsps-valo-base/img/logo-color-36px.png');
+// // Desired height of the logo (doesn't have to be the real picture height, resizing will occur then though)
+// $l-application-logo-height: 36px;
+// // Padding (empty space) around the logo
+// $l-application-logo-padding-top: 18px;					
+// $l-application-logo-padding-right: 24px;
+// $l-application-logo-padding-bottom: 18px;
+// $l-application-logo-padding-left: 24px;
+// // Desired height of the logo while using the tablet menu
+// $l-application-logo-tablet-height: 35px;
+// // Padding (empty space) around the logo while using the tablet menu
+// $l-application-logo-tablet-padding: 6px;
+
+$v-focus-color: #f1c40f;
+$v-table-border-color: rgba(0,0,0,0.15);
+$valo-menu-background-color: #2980b9;

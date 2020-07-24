@@ -1,0 +1,23 @@
+<module>
+
+    <!-- If you wish to make use of additional Vaadin components which require GWT module recompilation, please follow these steps:
+
+    1. enable automatic compilation of this widgetset by maven: open the app-vaadin-war/pom.xml file and configure the maven vaadin plugin accordingly;
+    also do not forget to add the vaadin-client-compiler dependency, by uncommenting the appropriate part in the pom.xml
+
+    2. Open the LspsUI Java file and modify the @Widgetset annotation, to reference this widgetset so it looks like this:
+       @Widgetset("com.whitestein.lsps.vaadin.webapp.MyWidgetSet")
+
+    3. Open the app-vaadin/pom.xml and add maven dependency to the Vaadin component jar file.
+
+    4. Edit this file and append appropriate <inherits> XML element.
+
+    -->
+
+    <!-- Inherit default LSPS widget set -->
+    <inherits name="com.whitestein.lsps.vaadin.widgets.WidgetSet" />
+    <!-- inherit additional widget sets from additional vaadin components -->
+    <inherits name="com.whitestein.lsps.vaadin.widgets.WidgetSetV7" />
+
+
+</module>

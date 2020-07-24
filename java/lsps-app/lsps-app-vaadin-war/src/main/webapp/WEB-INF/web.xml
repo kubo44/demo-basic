@@ -1,0 +1,392 @@
+<web-app id="WebApp_1178702080373" 
+  xmlns="http://java.sun.com/xml/ns/javaee" xmlns:jsp="http://java.sun.com/xml/ns/javaee/jsp"
+  xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
+  version="3.0">
+	<description>Living Systems Process Suite Application</description>
+	
+	<distributable/>
+
+	<!-- Vaadin servlet -->
+	<context-param>
+		<!-- Vaadin heartbeat in seconds - each open tab sends a request to server every x seconds. If the three 
+			 consecutive heartbeats dont arrive on the server, vaadin assumes that the tab was closed.
+
+			Lsps Default: 300
+		-->
+		<param-name>heartbeatInterval</param-name>
+		<param-value>300</param-value>
+	</context-param>
+	<servlet>
+		<servlet-name>LspsVaadinApp</servlet-name>
+		<servlet-class>com.whitestein.lsps.app.core.AppServlet</servlet-class>
+		<init-param>
+			<param-name>productionMode</param-name>
+			<param-value>true</param-value>
+		</init-param>
+		<!-- Close UI if the user is inactive. Each UI corresponds to one open tab. If closeIdleSessions is true and 
+			 user stops using the tab for session-timeout minutes, vaadin will assume the tab is inactive, inform the 
+			 browser that tab is idle and browser tab will cease to send heartbeats. 
+			 
+			 When all tabs are idle, there are no requests between browser and server. That means, the session will
+			 be closed by application server after session-timeout minutes passes.
+		-->
+		<init-param>
+			<param-name>closeIdleSessions</param-name>
+			<param-value>true</param-value>
+		</init-param>
+	</servlet>
+	<servlet>
+		<description>This servlet handles requests for visualization data.</description>
+		<servlet-name>Visualization Servlet</servlet-name>
+		<servlet-class>com.whitestein.lsps.vaadin.visualization.VisualizationServlet</servlet-class>
+	</servlet>
+	<servlet>
+		<description>This servlet offers JasperReports rendered as HTML</description>
+		<servlet-name>JasperReportServlet</servlet-name>
+		<servlet-class>com.whitestein.lsps.human.app.jasper.JasperHtmlServlet</servlet-class>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>LspsVaadinApp</servlet-name>
+		<url-pattern>/APP/PUBLISHED/*</url-pattern>
+		<url-pattern>/VAADIN/*</url-pattern>
+		<url-pattern>/ui/*</url-pattern>
+	</servlet-mapping>
+	
+	<servlet-mapping>
+		<servlet-name>Visualization Servlet</servlet-name>
+		<url-pattern>/visualization/*</url-pattern>
+	</servlet-mapping>
+
+	<servlet-mapping>
+		<!-- If this value changes, the jasper-reports-servlet-path-prefix in security filters needs to change too. 
+		-->
+		<servlet-name>JasperReportServlet</servlet-name>
+		<url-pattern>/jasper/html/*</url-pattern>
+	</servlet-mapping>
+
+	<!-- Filter to add security header X-Frame-Options into http response. As a result, browsers refuse to run the application 
+	 inside iframe. This is to prevent clickjacking attacks. 
+	
+	 Example: X-Frame-Options: DENY
+	 Meaning: the pages are not allowed to be shown from iframe.	
+	-->
+	<filter>
+		<filter-name>XFrameOptionsFilter</filter-name>
+		<filter-class>com.whitestein.lsps.human.app.http.XFrameOptionsForLspsFilter</filter-class>
+		<init-param>
+			<!-- Optional parameter. Specifies x-frame-option for urls that do NOT need to run inside the frame. Options:
+			
+			 DENY - Default. All requests comming from frame will be refused, regardless of the site attempting to do so.
+			 SAMEORIGIN - The page can only be displayed in a frame on the same origin as the page itself. There are some
+						  gotchas, see https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-Frame-Options for details.
+			 NONE - Same as not having filter at all.  
+			-->
+            <param-name>x-frame-option</param-name>
+            <param-value>DENY</param-value> 
+        </init-param>
+		<init-param>
+			<!-- Optional parameter. Specifies x-frame-option that *need* to be able to run inside frame. Options:
+			
+			 DENY - All requests comming from frame will be refused, regardless of the site attempting to do so.
+			 SAMEORIGIN - Default. The page can only be displayed in a frame on the same origin as the page itself. There are some
+						  gotchas, see https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-Frame-Options for details.
+			 NONE - Same as not having filter at all.  
+			-->
+            <param-name>x-frame-option-for-exceptions</param-name>
+            <param-value>SAMEORIGIN</param-value> 
+        </init-param>
+		<init-param>
+			<!--
+				Optional parameter. Jasper reports servlet path prefix. Jasper reports need to be among exception and user
+				can change their url. If the jasper reports servlet changes location, this value needs to change too. 
+			-->
+			<param-name>jasper-reports-servlet-path-prefix</param-name>
+            <param-value>/jasper/html</param-value> 
+        </init-param>
+	</filter>
+    <!-- Note: ui.jsp page needs to be able to run inside the iframe. Everything else can refuse the iframe. --> 
+	<filter-mapping>
+		<filter-name>XFrameOptionsFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+
+	<!--
+		Filter to add frame-ancestor content security policy header into responses. Frame-ancestors directive specifies 
+		which pages are allowed to embed response into iframe.
+		
+		Example: Content-Security-Policy: frame-ancestors 'self';
+	    Meaning: only same origin pages are allowed to embed page into iframe.	
+	-->
+	<filter>
+		<filter-name>FrameAncestorFilter</filter-name>
+		<filter-class>com.whitestein.lsps.human.app.http.FrameAncestorForLspsFilter</filter-class>
+		<init-param>
+			<!--
+				Optional parameter. Specifies frame-ancestors value for urls that do NOT need to run inside the frame. Options:
+			
+				The source in "Content-Security-Policy: frame-ancestors <source>;" header.	Multiple sources are separated by space.
+				If empty, the filter does nothing.
+			-->
+            <param-name>frame-ancestors-source</param-name>
+            <param-value>'none'</param-value>
+        </init-param>
+		<init-param>
+			<!--
+				Optional parameter. Specifies frame-ancestors value for urls that *need* to run inside the frame. Options:
+			
+				The source in "Content-Security-Policy: frame-ancestors <source>;" header.
+					
+				Multiple sources are separated by space.	
+				If empty, the filter does nothing.
+			-->
+            <param-name>frame-ancestors-source-for-exceptions</param-name>
+            <param-value>'self'</param-value> 
+        </init-param>
+		<init-param>
+			<!--
+				Optional parameter. Jasper reports servlet path prefix. Jasper reports need to be among exception and user
+				can change their url. If the jasper reports servlet changes location, this value needs to change too. 
+			-->
+			<param-name>jasper-reports-servlet-path-prefix</param-name>
+            <param-value>/jasper/html</param-value> 
+        </init-param>
+            </filter>
+	<filter-mapping>
+		<filter-name>FrameAncestorFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+	
+	<!-- Filter for serving additional Vaadin Themes dynamically -->
+	<filter>
+		<filter-name>VaadinDynamicThemeFilter</filter-name>
+		<filter-class>com.whitestein.lsps.vaadin.util.VaadinDynamicThemeFilter</filter-class>
+	</filter>
+	<filter-mapping>
+		<filter-name>VaadinDynamicThemeFilter</filter-name>
+		<url-pattern>/VAADIN/themes/*</url-pattern>
+	</filter-mapping>
+
+	<!-- Session timeout in minutes - if the session is without user activity for long enough, it will be destroyed 
+		 by application server. Note that:
+		   * this config is used by both vaadin and application server,
+		   * the service on application server that destroys up idle sessions runs every 5-6 minutes or so.
+
+		Lsps Default: 30	
+	-->
+	<session-config>
+		<session-timeout>30</session-timeout>
+	</session-config>
+	
+	<!-- Welcome files -->
+	<welcome-file-list>
+		<welcome-file>index.jsp</welcome-file>
+	</welcome-file-list>
+
+	<!-- Security -->
+	<security-constraint>
+		<web-resource-collection>
+			<web-resource-name>The Living Systems Process Suite Application</web-resource-name>
+			<url-pattern>/ui.jsp</url-pattern>
+		</web-resource-collection>
+		<auth-constraint>
+			<role-name>*</role-name>
+		</auth-constraint>
+	</security-constraint>
+	
+	<security-role>
+		<role-name>*</role-name>
+	</security-role>
+	
+	<login-config>
+		<auth-method>FORM</auth-method>
+		<realm-name>lspsRealm</realm-name>
+		<form-login-config>
+			<form-login-page>/login.jsp</form-login-page>
+			<form-error-page>/login.jsp?failed</form-error-page>
+		</form-login-config>
+	</login-config>
+
+	<!-- added to workaround injection on Websphere 7 with JSF 2.0 in a shared library -->
+	<ejb-local-ref>
+		<ejb-ref-name>ejb/ComponentServiceLocal</ejb-ref-name>
+		<ejb-ref-type>Session</ejb-ref-type>
+		<local>com.whitestein.lsps.common.ComponentServiceLocal</local>
+		<ejb-link>ComponentServiceBean</ejb-link>
+	</ejb-local-ref>
+
+	<!--  EJB references for automatic Vaadin injection -->
+	<ejb-local-ref>
+     	<ejb-ref-name>ejb/SecurityManagerServiceLocal</ejb-ref-name>
+      	<ejb-ref-type>Session</ejb-ref-type>
+      	<local>
+        	 com.whitestein.lsps.common.ejb.SecurityManagerServiceLocal
+      	</local>
+      	<ejb-link>
+        	SecurityManagerServiceBean
+      	</ejb-link>
+	</ejb-local-ref>
+	
+	<ejb-local-ref>
+     	<ejb-ref-name>ejb/PersonManagementServiceLocal</ejb-ref-name>
+      	<ejb-ref-type>Session</ejb-ref-type>
+      	<local>
+        	 com.whitestein.lsps.os.ejb.PersonManagementServiceLocal
+      	</local>
+      	<ejb-link>
+        	PersonManagementServiceBean
+      	</ejb-link>
+	</ejb-local-ref>
+	
+	<ejb-local-ref>
+     	<ejb-ref-name>ejb/PersonServiceLocal</ejb-ref-name>
+      	<ejb-ref-type>Session</ejb-ref-type>
+      	<local>
+        	 com.whitestein.lsps.os.ejb.PersonServiceLocal
+      	</local>
+      	<ejb-link>
+        	PersonServiceBean
+      	</ejb-link>
+	</ejb-local-ref>
+	
+	<ejb-local-ref>
+     	<ejb-ref-name>ejb/ModelManagementServiceLocal</ejb-ref-name>
+      	<ejb-ref-type>Session</ejb-ref-type>
+      	<local>
+        	 com.whitestein.lsps.engine.ejb.ModelManagementServiceLocal
+      	</local>
+      	<ejb-link>
+        	ModelManagementServiceBean
+      	</ejb-link>
+	</ejb-local-ref>
+	
+	<ejb-local-ref>
+     	<ejb-ref-name>ejb/HumanActionsServiceLocal</ejb-ref-name>
+      	<ejb-ref-type>Session</ejb-ref-type>
+      	<local>
+        	 com.whitestein.lsps.human.ejb.HumanActionsServiceLocal
+      	</local>
+      	<ejb-link>
+        	HumanActionsServiceBean
+      	</ejb-link>
+	</ejb-local-ref>
+	
+	<ejb-local-ref>
+     	<ejb-ref-name>ejb/TodoServiceLocal</ejb-ref-name>
+      	<ejb-ref-type>Session</ejb-ref-type>
+      	<local>
+        	 com.whitestein.lsps.human.ejb.TodoServiceLocal
+      	</local>
+      	<ejb-link>
+        	TodoServiceBean
+      	</ejb-link>
+	</ejb-local-ref>
+	
+	<ejb-local-ref>
+     	<ejb-ref-name>ejb/ProcessServiceLocal</ejb-ref-name>
+      	<ejb-ref-type>Session</ejb-ref-type>
+      	<local>
+        	 com.whitestein.lsps.engine.ejb.ProcessServiceLocal
+      	</local>
+      	<ejb-link>
+        	ProcessServiceBean
+      	</ejb-link>
+	</ejb-local-ref>
+	
+	<ejb-local-ref>
+     	<ejb-ref-name>ejb/LocalizationServiceLocal</ejb-ref-name>
+      	<ejb-ref-type>Session</ejb-ref-type>
+      	<local>
+        	 com.whitestein.lsps.engine.ejb.LocalizationServiceLocal
+      	</local>
+      	<ejb-link>
+        	LocalizationServiceBean
+      	</ejb-link>
+	</ejb-local-ref>
+	
+	<ejb-local-ref>
+     	<ejb-ref-name>ejb/ModelProviderClientService</ejb-ref-name>
+      	<ejb-ref-type>Session</ejb-ref-type>
+      	<local>
+        	 com.whitestein.lsps.engine.ModelProviderClientService
+      	</local>
+      	<ejb-link>
+        	ModelProviderServiceBean
+      	</ejb-link>
+	</ejb-local-ref>
+	
+	<ejb-local-ref>
+     	<ejb-ref-name>ejb/BinaryDataServiceLocal</ejb-ref-name>
+      	<ejb-ref-type>Session</ejb-ref-type>
+      	<local>
+        	 com.whitestein.lsps.engine.ejb.BinaryDataServiceLocal
+      	</local>
+      	<ejb-link>
+        	BinaryDataServiceBean
+      	</ejb-link>
+	</ejb-local-ref>
+	
+	<ejb-local-ref>
+     	<ejb-ref-name>ejb/GenericDocumentServiceLocal</ejb-ref-name>
+      	<ejb-ref-type>Session</ejb-ref-type>
+      	<local>
+        	 com.whitestein.lsps.human.ejb.GenericDocumentServiceLocal
+      	</local>
+      	<ejb-link>
+        	GenericDocumentServiceBean
+      	</ejb-link>
+	</ejb-local-ref>
+	
+	<ejb-local-ref>
+     	<ejb-ref-name>ejb/SharedRecordTypeFactory</ejb-ref-name>
+      	<ejb-ref-type>Session</ejb-ref-type>
+      	<local>
+        	 com.whitestein.lsps.engine.SharedRecordTypeFactory
+      	</local>
+      	<ejb-link>
+        	SharedRecordTypeFactoryImpl
+      	</ejb-link>
+	</ejb-local-ref>
+	
+	<ejb-local-ref>
+     	<ejb-ref-name>ejb/ModelInstanceUtilsService</ejb-ref-name>
+      	<ejb-ref-type>Session</ejb-ref-type>
+      	<local>
+        	 com.whitestein.lsps.engine.ModelInstanceUtilsService
+      	</local>
+      	<ejb-link>
+        	ModelInstanceUtilsServiceBean
+      	</ejb-link>
+	</ejb-local-ref>
+	
+	<ejb-local-ref>
+		<ejb-ref-name>ejb/VaadinThemeCacheLocal</ejb-ref-name>
+		<ejb-ref-type>Session</ejb-ref-type>
+		<local>com.whitestein.lsps.human.ejb.VaadinThemeCacheLocal</local>
+		<ejb-link>VaadinThemeCacheBean</ejb-link>
+	</ejb-local-ref>
+	
+	<ejb-local-ref>
+		<ejb-ref-name>ejb/VisualizationServiceLocal</ejb-ref-name>
+		<ejb-ref-type>Session</ejb-ref-type>
+		<local>com.whitestein.lsps.visualization.VisualizationServiceLocal</local>
+		<ejb-link>VisualizationServiceBean</ejb-link>
+	</ejb-local-ref>
+	
+	<ejb-local-ref>
+		<ejb-ref-name>ejb/SharedRecordNotifier</ejb-ref-name>
+		<ejb-ref-type>Session</ejb-ref-type>
+		<local>com.whitestein.lsps.engine.ejb.SharedRecordNotifier</local>
+		<ejb-link>SharedRecordNotifierImpl</ejb-link>
+	</ejb-local-ref>
+
+	<ejb-local-ref>
+		<ejb-ref-name>ejb/SettingManagementServiceLocal</ejb-ref-name>
+		<ejb-ref-type>Session</ejb-ref-type>
+		<local>com.whitestein.lsps.engine.ejb.SettingManagementServiceLocal</local>
+		<ejb-link>SettingManagementServiceBean</ejb-link>
+	</ejb-local-ref>
+	
+</web-app>

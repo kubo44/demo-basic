@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<weblogic-application xmlns="http://xmlns.oracle.com/weblogic/weblogic-application" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://xmlns.oracle.com/weblogic/weblogic-application http://www.oracle.com/technology/weblogic/weblogic-application/1.0/weblogic-application.xsd">
+	<security>
+		<security-role-assignment>
+			<role-name>*</role-name>
+			<principal-name>users</principal-name>
+		</security-role-assignment>
+	</security>
+	<session-descriptor>
+		<sharing-enabled>false</sharing-enabled>
+	</session-descriptor>
+	<!-- This tells WebLogic to prefer packages in our EAR which conflict with packages in WebLogic -->
+	<prefer-application-packages>
+		<!-- ANTLR libraries in Hibernate -->
+		<package-name>org.antlr.*</package-name>
+		<!-- ANTLR uses internally classes from package antlr -->
+		<package-name>antlr.*</package-name>
+		<!-- Rhino Javascript in BIRT -->
+		<package-name>org.mozilla.*</package-name>
+		<!-- Joda - WL is on 1.2.1 we are on 1.5.2 -->
+		<package-name>org.joda.*</package-name>
+		<!-- JPA2 - WL is on JPA1 we are on JPA2 -->
+		<!--  temporarily disable package-name>javax.persistence.*</package-name-->
+		<package-name>org.hibernate.*</package-name>
+		<!-- We ship own version of Javassist -->
+		<package-name>javassist.*</package-name>
+		<!-- guava -->
+		<package-name>com.google.common.*</package-name>
+	</prefer-application-packages>
+</weblogic-application>

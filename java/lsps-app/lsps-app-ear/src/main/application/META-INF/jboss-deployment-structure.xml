@@ -1,0 +1,262 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jboss-deployment-structure xmlns="urn:jboss:deployment-structure:1.1">
+	<!-- Make sub deployments NOT isolated, so they can see each others classes without a Class-Path entry -->
+	<ear-subdeployments-isolated>false</ear-subdeployments-isolated>
+	<deployment>
+		<dependencies>
+			<!-- FIXME Due to a bug known in JBoss 7 (confirmed for up to 7.1.1.Final, https://issues.jboss.org/browse/AS7-1271), 
+				com.whitestein.lsps.wsserver.task.WsRequestMessage cannot be deserialized if sent assynchronously through JMS. This fixes 
+				the issue. Remove when not needed anymore. -->
+			<module name="org.apache.xerces" export="true" />
+		</dependencies>
+		<exclusions>
+			<!-- Exclusions allow you to prevent the server from automatically adding some dependencies -->
+			<module name="org.dom4j"/>
+			<module name="org.apache.log4j" />
+			<!-- We ship own version of Hibernate -->
+			<module name="org.hibernate" />
+			<!-- We ship own version of Javassist -->
+			<module name="org.javassist" />
+		</exclusions>
+	</deployment>
+	
+	<!--excludes must be add to all ejb,web modules otherwise jboss not handling it correctly -->	
+  <sub-deployment name="lsps-engine-exec.jar">
+    <exclusions>
+      <module name="org.apache.log4j" />
+      <module name="org.jboss.logging" />
+      <module name="org.jboss.logmanager" />
+      <module name="org.jboss.log4j.logmanager" />
+      <module name="org.slf4j"/>
+      <module name="org.hibernate" />
+      <module name="org.javassist" />
+    </exclusions>
+    <dependencies>
+      <module name="com.oracle.ojdbc7" optional="true" />
+      <module name="com.oracle.ojdbc" optional="true" />
+      <module name="org.jboss.ironjacamar.jdbcadapters" />
+    </dependencies>
+  </sub-deployment>
+  
+  <sub-deployment name="lsps-os-exec.jar">
+    <exclusions>
+      <module name="org.apache.log4j" />
+      <module name="org.jboss.logging" />
+      <module name="org.jboss.logmanager" />
+      <module name="org.jboss.log4j.logmanager" />
+      <module name="org.slf4j"/>
+      <module name="org.hibernate" />
+      <module name="org.javassist" />
+    </exclusions>
+    <dependencies>
+      <module name="com.oracle.ojdbc7" optional="true" />
+      <module name="com.oracle.ojdbc" optional="true" />
+      <module name="org.jboss.ironjacamar.jdbcadapters" />
+    </dependencies>
+  </sub-deployment>
+  
+  <sub-deployment name="lsps-pm-exec.jar">
+    <exclusions>
+      <module name="org.apache.log4j" />
+      <module name="org.jboss.logging" />
+      <module name="org.jboss.logmanager" />
+      <module name="org.jboss.log4j.logmanager" />
+      <module name="org.slf4j"/>
+      <module name="org.hibernate" />
+      <module name="org.javassist" />
+    </exclusions>
+    <dependencies>
+      <module name="com.oracle.ojdbc7" optional="true" />
+      <module name="com.oracle.ojdbc" optional="true" />
+      <module name="org.jboss.ironjacamar.jdbcadapters" />
+    </dependencies>
+  </sub-deployment>
+  
+   <sub-deployment name="lsps-human-exec.jar">
+    <exclusions>
+      <module name="org.apache.log4j" />
+      <module name="org.jboss.logging" />
+      <module name="org.jboss.logmanager" />
+      <module name="org.jboss.log4j.logmanager" />
+      <module name="org.slf4j"/>
+      <module name="org.hibernate" />
+      <module name="org.javassist" />
+    </exclusions>
+    <dependencies>
+      <module name="com.oracle.ojdbc7" optional="true" />
+      <module name="com.oracle.ojdbc" optional="true" />
+      <module name="org.jboss.ironjacamar.jdbcadapters" />
+    </dependencies>
+  </sub-deployment>
+  
+    <sub-deployment name="lsps-tools-debugger-server.jar">
+    <exclusions>
+      <module name="org.apache.log4j" />
+      <module name="org.jboss.logging" />
+      <module name="org.jboss.logmanager" />
+      <module name="org.jboss.log4j.logmanager" />
+      <module name="org.slf4j"/>
+      <module name="org.hibernate" />
+      <module name="org.javassist" />
+    </exclusions>
+    <dependencies>
+      <module name="com.oracle.ojdbc7" optional="true" />
+      <module name="com.oracle.ojdbc" optional="true" />
+      <module name="org.jboss.ironjacamar.jdbcadapters" />
+    </dependencies>
+  </sub-deployment>
+  
+  <sub-deployment name="lsps-tools-components.jar">
+    <exclusions>
+      <module name="org.apache.log4j" />
+      <module name="org.jboss.logging" />
+      <module name="org.jboss.logmanager" />
+      <module name="org.jboss.log4j.logmanager" />
+      <module name="org.slf4j"/>
+      <module name="org.hibernate" />
+      <module name="org.javassist" />
+    </exclusions>
+    <dependencies>
+      <module name="com.oracle.ojdbc7" optional="true" />
+      <module name="com.oracle.ojdbc" optional="true" />
+      <module name="org.jboss.ironjacamar.jdbcadapters" />
+    </dependencies>
+  </sub-deployment>
+    
+    <sub-deployment name="lsps-app-ejb.jar">
+    <exclusions>
+      <module name="org.apache.log4j" />
+      <module name="org.jboss.logging" />
+      <module name="org.jboss.logmanager" />
+      <module name="org.jboss.log4j.logmanager" />
+      <module name="org.slf4j"/>
+      <module name="org.hibernate" />
+      <module name="org.javassist" />
+    </exclusions>
+    <dependencies>
+      <module name="com.oracle.ojdbc7" optional="true" />
+      <module name="com.oracle.ojdbc" optional="true" />
+      <module name="org.jboss.ironjacamar.jdbcadapters" />
+    </dependencies>
+     </sub-deployment>
+    
+     <sub-deployment name="lsps-monitoring-exec.jar">
+    <exclusions>
+      <module name="org.apache.log4j" />
+      <module name="org.jboss.logging" />
+      <module name="org.jboss.logmanager" />
+      <module name="org.jboss.log4j.logmanager" />
+      <module name="org.slf4j"/>
+      <module name="org.hibernate" />
+      <module name="org.javassist" />
+    </exclusions>
+    <dependencies>
+      <module name="com.oracle.ojdbc7" optional="true" />
+      <module name="com.oracle.ojdbc" optional="true" />
+      <module name="org.jboss.ironjacamar.jdbcadapters" />
+    </dependencies>
+     </sub-deployment>
+ 
+   <sub-deployment name="lsps-app-vaadin.war">
+    <exclusions>
+      <module name="org.apache.log4j" />
+      <module name="org.jboss.logging" />
+      <module name="org.jboss.logmanager" />
+      <module name="org.jboss.log4j.logmanager" />
+      <module name="org.slf4j"/>
+      <module name="org.hibernate" />
+      <module name="org.javassist" />
+    </exclusions>
+    <dependencies>
+      <module name="com.oracle.ojdbc7" optional="true" />
+      <module name="com.oracle.ojdbc" optional="true" />
+      <module name="org.jboss.ironjacamar.jdbcadapters" />
+    </dependencies>
+  </sub-deployment>
+  
+  <sub-deployment name="lsps-webconsole-vaadin-war.war">
+    <exclusions>
+      <module name="org.apache.log4j" />
+      <module name="org.jboss.logging" />
+      <module name="org.jboss.logmanager" />
+      <module name="org.jboss.log4j.logmanager" />
+      <module name="org.slf4j"/>
+      <module name="org.hibernate" />
+      <module name="org.javassist" />
+    </exclusions>
+    <dependencies>
+      <module name="com.oracle.ojdbc7" optional="true" />
+      <module name="com.oracle.ojdbc" optional="true" />
+      <module name="org.jboss.ironjacamar.jdbcadapters" />
+    </dependencies>
+  </sub-deployment>
+  
+   <sub-deployment name="lsps-engine-ws.war">
+    <exclusions>
+      <module name="org.apache.log4j" />
+      <module name="org.jboss.logging" />
+      <module name="org.jboss.logmanager" />
+      <module name="org.jboss.log4j.logmanager" />
+      <module name="org.slf4j"/>
+      <module name="org.hibernate" />
+      <module name="org.javassist" />
+    </exclusions>
+    <dependencies>
+      <module name="com.oracle.ojdbc7" optional="true" />
+      <module name="com.oracle.ojdbc" optional="true" />
+      <module name="org.jboss.ironjacamar.jdbcadapters" />
+    </dependencies>
+  </sub-deployment>
+  
+  <sub-deployment name="lsps-human-ws.war">
+    <exclusions>
+      <module name="org.apache.log4j" />
+      <module name="org.jboss.logging" />
+      <module name="org.jboss.logmanager" />
+      <module name="org.jboss.log4j.logmanager" />
+      <module name="org.slf4j"/>
+      <module name="org.hibernate" />
+      <module name="org.javassist" />
+    </exclusions>
+    <dependencies>
+      <module name="com.oracle.ojdbc7" optional="true" />
+      <module name="com.oracle.ojdbc" optional="true" />
+      <module name="org.jboss.ironjacamar.jdbcadapters" />
+    </dependencies>
+  </sub-deployment>
+   
+  <sub-deployment name="lsps-os-ws.war">
+    <exclusions>
+      <module name="org.apache.log4j" />
+      <module name="org.jboss.logging" />
+      <module name="org.jboss.logmanager" />
+      <module name="org.jboss.log4j.logmanager" />
+      <module name="org.slf4j"/>
+      <module name="org.hibernate" />
+      <module name="org.javassist" />
+    </exclusions>
+    <dependencies>
+      <module name="com.oracle.ojdbc7" optional="true" />
+      <module name="com.oracle.ojdbc" optional="true" />
+      <module name="org.jboss.ironjacamar.jdbcadapters" />
+    </dependencies>
+  </sub-deployment>
+  
+   <sub-deployment name="lsps-monitoring-ws.war">
+    <exclusions>
+      <module name="org.apache.log4j" />
+      <module name="org.jboss.logging" />
+      <module name="org.jboss.logmanager" />
+      <module name="org.jboss.log4j.logmanager" />
+      <module name="org.slf4j"/>
+      <module name="org.hibernate" />
+      <module name="org.javassist" />
+    </exclusions>
+    <dependencies>
+      <module name="com.oracle.ojdbc7" optional="true" />
+      <module name="com.oracle.ojdbc" optional="true" />
+      <module name="org.jboss.ironjacamar.jdbcadapters" />
+    </dependencies>
+  </sub-deployment>
+  
+</jboss-deployment-structure>

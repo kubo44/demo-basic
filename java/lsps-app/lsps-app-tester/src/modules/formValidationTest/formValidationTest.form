@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<com.whitestein.lsps.modeler.form2:Form
+    xmi:version="2.0"
+    xmlns:xmi="http://www.omg.org/XMI"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:com.whitestein.lsps.modeler.form2="http:///com/whitestein/lsps/modeler/form2.ecore"
+    xmi:id="_WnBOEPb1EeiQ0Mvisflzog"
+    name="formValidationTest">
+  <variables
+      xmi:id="_bqFfUPb1EeiQ0Mvisflzog"
+      name="i"
+      type="Decimal"/>
+  <root
+      xsi:type="com.whitestein.lsps.modeler.form2:FLayout"
+      xmi:id="_YFVmMPb1EeiQ0Mvisflzog"
+      componentID="top">
+    <components
+        xsi:type="com.whitestein.lsps.modeler.form2:FSimpleComponent"
+        xmi:id="_aJQlwPb1EeiQ0Mvisflzog"
+        componentID="INPUT"
+        type="DECIMAL_FIELD">
+      <binding
+          xmi:id="_aJRM0Pb1EeiQ0Mvisflzog"/>
+    </components>
+    <components
+        xsi:type="com.whitestein.lsps.modeler.form2:FButton"
+        xmi:id="_ib5xYPb1EeiQ0Mvisflzog"
+        componentID="SUBMIT">
+      <caption><![CDATA["Submit"]]></caption>
+      <clickListener><![CDATA[{ e ->
+	if (top.isValid()) then
+		Forms.submit();
+	end;
+}]]></clickListener>
+    </components>
+  </root>
+</com.whitestein.lsps.modeler.form2:Form>

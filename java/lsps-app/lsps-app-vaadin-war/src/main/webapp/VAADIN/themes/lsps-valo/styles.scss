@@ -1,0 +1,32 @@
+//	LSPS base theme and Vaadin Valo variables
+@import "../lsps-valo-base/sass/_variables";
+
+//	Override Vaadin Valo and LSPS base variables here				
+@import "sass/_variables";
+
+//	LSPS base theme containing styles for standard Vaadin components, based on Vaadin Valo
+@import "../lsps-valo-base/lsps-valo-base";
+
+//	LSPS standard application theme containing styles for all LSPS specific components
+@import "../application-valo-base/sass/theme-app";
+
+// addons, mostly from lsps-vaadin-widgets
+@import "addons.scss";
+
+@import "../../../VAADIN/themes/wtpdfviewer/wtpdfviewer.scss";
+
+// these two have to be outside of the theme, because com.vaadin.sass.SassCompiler does not support @at-root
+// and font-face needs to be at root
+@include lsps-extensions-at-root;
+
+.lsps-valo {
+  @include addons;
+  @include lsps-valo-base;
+  @include theme-app;
+}
+
+// these two have to be outside of the theme, because:
+// 1.) com.vaadin.sass.SassCompiler does not support @at-root
+// 2.) com.vaadin.sass.SassCompiler handles nested @media incorrectly https://github.com/vaadin/sass-compiler/issues/120
+@include wtPdfViewerMedia2dppx;
+@include wtPdfViewerPrintSupport;

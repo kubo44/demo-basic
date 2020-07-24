@@ -1,0 +1,20 @@
+//	LSPS base theme and Vaadin Valo variables
+@import "../lsps-valo-base/sass/_variables";
+
+//	Override Vaadin Valo variables here				
+@import "sass/_variables";
+
+//	LSPS base theme containing styles for standard Vaadin components, based on Vaadin Valo
+@import "../lsps-valo-base/lsps-valo-base";
+
+//	LSPS standard application theme containing styles for all LSPS specific components
+@import "../lsps-valo/styles";
+
+// addons, mostly from lsps-vaadin-widgets
+@import "addons.scss";
+
+.lsps-blue {
+	@include addons;
+	@include lsps-valo-base;
+	@include theme-app;
+}

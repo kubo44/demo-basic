@@ -1,0 +1,101 @@
+<?xml version="1.0"?>
+<tomee>
+	<!-- H2 example -->
+	<Resource id="jdbc/LSPS_DS" type="javax.sql.DataSource">
+		JdbcDriver org.h2.Driver
+		JdbcUrl jdbc:h2:tcp://localhost/./h2/h2;MVCC=TRUE;LOCK_TIMEOUT=60000
+		Username lsps
+		Password lsps
+	</Resource>
+
+	<!-- MYSQL example -->
+	<!--Resource id="jdbc/LSPS_DS" type="javax.sql.DataSource">
+		JdbcDriver com.mysql.cj.jdbc.Driver
+		JdbcUrl jdbc:mysql://localhost:3306/lsps?useSSL=false&amp;useUnicode=true&amp;characterEncoding=utf-8&amp;useJDBCCompliantTimezoneShift=true&amp;useLegacyDatetimeCode=false&amp;serverTimezone=UTC
+		Username lsps
+		Password lsps
+	</Resource-->
+
+	<!-- PostreSQL example -->
+	<!--Resource id="jdbc/LSPS_DS" type="javax.sql.DataSource">
+		JdbcDriver org.postgresql.Driver
+		JdbcUrl jdbc:postgresql://localhost/lsps
+		Username lsps
+		Password lsps
+	</Resource-->
+	
+	<!-- Oracle example -->
+	<!--Resource id="jdbc/LSPS_DS" type="javax.sql.DataSource">
+		JdbcDriver oracle.jdbc.OracleDriver
+		JdbcUrl jdbc:oracle:thin:@localhost:51521/XE
+		Username c##lsps
+		Password lsps
+	</Resource-->
+
+	<!-- Oracle example with SID -->
+	<!--Resource id="jdbc/LSPS_DS" type="javax.sql.DataSource">
+		JdbcDriver oracle.jdbc.OracleDriver
+		JdbcUrl jdbc:oracle:thin:@localhost:1521:lsps
+		Username lsps
+		Password lsps
+	</Resource-->
+
+	<!-- MSSQL example -->
+  	<!--Resource id="jdbc/LSPS_DS" type="javax.sql.DataSource">
+		JdbcDriver com.microsoft.sqlserver.jdbc.SQLServerDriver
+		JdbcUrl jdbc:sqlserver://localhost:1433;databaseName=lsps;sendStringParametersAsUnicode=false
+		Username lsps
+		Password lsps
+	</Resource-->
+
+	<!-- DB2 example -->
+	<!--Resource id="jdbc/LSPS_DS" type="javax.sql.DataSource">
+		JdbcDriver com.ibm.db2.jcc.DB2Driver
+		JdbcUrl jdbc:db2://localhost:50000/lsps:progressiveStreaming=2;
+		Username admin
+		Password admin
+	</Resource-->
+
+  <Resource id="MyJmsResourceAdapter" type="ActiveMQResourceAdapter">
+    BrokerXmlConfig broker:(tcp://localhost:61616)
+    ServerUrl tcp://localhost:61616
+  </Resource>  
+  <Resource id="jms/LSPS_CF" type="javax.jms.ConnectionFactory">
+    ResourceAdapter = MyJmsResourceAdapter
+  </Resource>
+	<Resource id="jms/LSPS_QUEUE" type="javax.jms.Queue">
+		destination = jms/LSPS_QUEUE
+	</Resource>
+	<Resource id="jms/LSPS_TOPIC" type="javax.jms.Topic">
+		destination = jms/LSPS_TOPIC
+	</Resource>
+	<Resource id="mail/LSPS_MAIL"  type="javax.mail.Session">
+		<!--  
+	 	mail.transport.protocol smtp 
+		mail.smtp.host your.mail.server
+		mail.smtp.port 25
+		mail.from your@address
+		-->
+		
+		<!-- server that requires authentication
+		mail.smtp.sasl.mechanisms=PLAIN
+		mail.transport.protocol=smtp
+		mail.smtp.host=your.mail.server
+		mail.smtp.port=25 
+		mail.from=your@address
+		mail.smtp.user=a_user
+		mail.smtp.auth=true
+		mail.smtp.starttls.enable=true
+		mail.smtp.password=a_password
+		password=a_password
+		 -->
+	</Resource>
+	<SecurityService id="org.apache.tomee#Tomcat Security Service"/>
+	<TransactionManager id="Default Transaction Manager"/>
+	<Container id="stateless" type="STATELESS">
+		StrictPooling = false
+	</Container>
+	<Container id="My JMS MDB Container" type="MESSAGE">
+		ResourceAdapter = MyJmsResourceAdapter
+	</Container>
+</tomee>

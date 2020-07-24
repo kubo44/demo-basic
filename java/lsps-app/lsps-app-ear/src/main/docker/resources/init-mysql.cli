@@ -1,0 +1,23 @@
+embed-server --server-config=standalone-full.xml --std-out=echo
+
+batch
+
+module add --name=com.mysql --resources=/opt/jboss/wildfly/lsps/mysql-connector-java.jar --dependencies=javax.api,javax.transaction.api
+
+# Add MySQL JDBC driver
+/subsystem=datasources/jdbc-driver=mysqlxa:add( \
+    driver-name=mysqlxa, \
+    driver-module-name=com.mysql, \
+    driver-xa-datasource-class-name=com.mysql.cj.jdbc.MysqlXADataSource \
+)
+
+# Datasource
+xa-data-source add --jndi-name=java:/jdbc/LSPS_DS --name=LSPS_DS \
+                --xa-datasource-properties=URL="${env.LSPS_JDBC_URL:}" \
+                --driver-name=mysqlxa --user-name=${env.LSPS_DB_USER:} --password=${env.LSPS_DB_PASSWORD:} \
+                --use-java-context="false" --min-pool-size=10 --max-pool-size=50  \
+                --transaction-isolation=TRANSACTION_READ_COMMITTED
+
+run-batch
+
+stop-embedded-server

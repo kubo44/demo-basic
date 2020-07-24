@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- This is a WebSphere deployment configuration file -->
+<appdeployment:Deployment xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:appdeployment="http://www.ibm.com/websphere/appserver/schemas/5.0/appdeployment.xmi" xmi:id="Deployment_1265033352953">
+  <deployedObject xmi:type="appdeployment:ApplicationDeployment" xmi:id="ApplicationDeployment_1265033352953" deploymentId="0" startingWeight="1">
+    <classloader xmi:id="Classloader_1265033352953" mode="PARENT_LAST"/>
+  </deployedObject>
+</appdeployment:Deployment>

@@ -1,0 +1,71 @@
+embed-server --server-config=standalone-full.xml --std-out=echo
+
+batch
+
+# additional startup parameters
+/system-property=org.eclipse.emf.ecore.EPackage.Registry.INSTANCE:add(value=org.eclipse.emf.ecore.impl.EPackageRegistryImpl)
+/system-property=org.apache.el.parser.COERCE_TO_ZERO:add(value=false)
+/system-property=org.jboss.resolver.warning:add(value=true)
+/system-property=sun.rmi.dgc.client.gcInterval:add(value=3600000)
+/system-property=sun.rmi.dgc.server.gcInterval:add(value=3600000)
+/system-property=ironjacamar.mcp:add(value=org.jboss.jca.core.connectionmanager.pool.mcp.LeakDumperManagedConnectionPool)
+/system-property=ironjacamar.leaklog:add(value=connection-leaks.log)
+
+/subsystem=infinispan/cache-container=web/local-cache=passivation/locking=LOCKING:add(isolation=REPEATABLE_READ,acquire-timeout="600000")
+
+/subsystem=logging/logger=org.hibernate.SQL:add
+/subsystem=logging/logger=org.hibernate.SQL:write-attribute(name="level", value="DEBUG")
+/subsystem=logging/root-logger=ROOT:write-attribute(name="level", value="DEBUG")
+
+# Security
+/subsystem=security/security-domain=lspsRealm:add(cache-type="default")
+/subsystem=security/security-domain=lspsRealm/authentication=classic:add
+/subsystem=security/security-domain=lspsRealm/authentication=classic/login-module=LspsLogin:add( \
+   code=com.whitestein.lsps.security.jboss.LSPSRealm, \
+   flag=required, \
+   module=com.whitestein.lsps.security, \
+   module-options=[ \
+       ("dsJndiName"=>"java:/jdbc/LSPS_DS") \
+     ])
+/subsystem=security/security-domain=lspsRealm/authorization=classic:add(policy-modules=[{ \
+    "code"="Delegating", \
+    "flag"="required" }] )
+/subsystem=security/security-domain=lspsRealm:write-attribute(name=cache-type, value=default)
+
+/subsystem=ee/service=default-bindings:write-attribute(name=datasource, value="java:/jdbc/LSPS_DS")
+
+# EJB3
+/subsystem=ejb3/strict-max-bean-instance-pool=slsb-strict-max-pool:remove
+/subsystem=ejb3/strict-max-bean-instance-pool=mdb-strict-max-pool:remove
+/subsystem=ejb3/strict-max-bean-instance-pool=slsb-strict-max-pool:add(max-pool-size="200",timeout=10000,timeout-unit=MILLISECONDS)
+/subsystem=ejb3/strict-max-bean-instance-pool=mdb-strict-max-pool:add(max-pool-size="10",timeout=60000,timeout-unit=MILLISECONDS)
+/subsystem=ejb3:write-attribute(name=default-missing-method-permissions-deny-access, value="false")
+
+# Mail
+/socket-binding-group=standard-sockets/remote-destination-outbound-socket-binding=mail-smtp:write-attribute(name=host,value="${env.SMTP_HOST:localhost}")
+/subsystem=mail/mail-session=LSPS_MAIL:add(jndi-name="java:jboss/mail/LSPS_MAIL",from="${env.FROM_EMAIL:mail@whitestein.com}")
+/subsystem=mail/mail-session=LSPS_MAIL/server=smtp:add(outbound-socket-binding-ref="mail-smtp",ssl="${env.SMTP_SSL:false}")
+
+# Messaging
+jms-queue add --queue-address=LSPS_QUEUE  --entries=["java:jboss/jms/LSPS_QUEUE"]
+jms-topic add --topic-address=LSPS_TOPIC  --entries=["java:jboss/jms/LSPS_TOPIC"]
+
+# Transaction
+/subsystem=transactions/:write-attribute(name=enable-statistics,value=true)
+/subsystem=transactions/:write-attribute(name=default-timeout,value=600)
+
+# Undertow
+/subsystem=undertow/server=default-server/http-listener=default:write-attribute(name=max-parameters,value="15000")
+
+# Increase deployment timeout
+/system-property=jboss.as.management.blocking.timeout:add(value=900)
+/subsystem=deployment-scanner/scanner=default:write-attribute(name=deployment-timeout,value=900)
+
+# Update WSDL config
+/subsystem=webservices/:write-attribute(name=modify-wsdl-address,value=true)
+/subsystem=webservices/:write-attribute(name=wsdl-host,value=jbossws.undefined.host)
+/interface=public:write-attribute(name=any-address)
+
+run-batch
+
+stop-embedded-server

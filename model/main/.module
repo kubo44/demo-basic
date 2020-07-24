@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<com.whitestein.lsps.modeler.module:ModuleDescription
+    xmi:version="2.0"
+    xmlns:xmi="http://www.omg.org/XMI"
+    xmlns:com.whitestein.lsps.modeler.module="http:///com/whitestein/lsps/modeler/module.ecore"
+    xmi:id="_sW_YIL9AEemU47bAD7tZEA"
+    version="1.0"
+    description=""
+    main="true">
+  <moduleImports
+      xmi:id="_0vyPEL9AEemU47bAD7tZEA"
+      moduleName="user-interface"
+      description=""/>
+  <terminateCondition></terminateCondition>
+</com.whitestein.lsps.modeler.module:ModuleDescription>

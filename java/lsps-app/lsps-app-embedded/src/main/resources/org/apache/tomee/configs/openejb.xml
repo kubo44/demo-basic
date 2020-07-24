@@ -1,0 +1,46 @@
+<?xml version="1.0"?>
+<openejb>
+	<Resource id="jdbc/LSPS_DS" type="javax.sql.DataSource">
+		JdbcDriver org.h2.Driver
+		JdbcUrl jdbc:h2:tcp://localhost/h2/h2;MVCC=TRUE;LOCK_TIMEOUT=60000
+		Username lsps
+		Password lsps
+#		DefaultTransactionIsolation = READ_COMMITTED 
+	</Resource>
+	
+	<Resource id="jms/LSPS_QUEUE" type="javax.jms.Queue">
+		destination jms/LSPS_QUEUE
+	</Resource>
+	<Resource id="jms/LSPS_TOPIC" type="javax.jms.Topic">
+		destination jms/LSPS_TOPIC
+	</Resource>
+	<Resource id="mail/LSPS_MAIL"  type="javax.mail.Session">
+		<!--  
+	 	mail.transport.protocol smtp 
+		mail.smtp.host your.mail.server
+		mail.smtp.port 25
+		mail.from your@address
+		-->
+		
+		<!-- server that requires authentication
+		mail.smtp.sasl.mechanisms=PLAIN
+		mail.transport.protocol=smtp
+		mail.smtp.host=your.mail.server
+		mail.smtp.port=25 
+		mail.from=your@address
+		mail.smtp.user=a_user
+		mail.smtp.auth=true
+		mail.smtp.starttls.enable=true
+		mail.smtp.password=a_password
+		password=a_password
+		 -->
+	</Resource>
+	<SecurityService id="org.apache.tomee#Tomcat Security Service"/>
+	<TransactionManager id="Default Transaction Manager"/>
+	<Container id="stateless" type="STATELESS">
+		StrictPooling false
+	</Container>
+	
+	
+	
+</openejb>
