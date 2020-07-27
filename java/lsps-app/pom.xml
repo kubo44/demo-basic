@@ -14,7 +14,7 @@
 	<!-- Description is used in the footer of the login screen -->
 	<description>Living Systems Process Application</description>
 	<packaging>pom</packaging>
-	
+	<version>3.6.1004-SNAPSHOT</version>
 	
 	<properties>
 		<lsps.version>3.6.1004-SNAPSHOT</lsps.version>
