@@ -13,7 +13,7 @@
 	<packaging>jar</packaging>
 
 	<properties>
-		<lsps.model.directory>${project.build.directory}/../../lsps-app-model</lsps.model.directory>
+		<lsps.model.directory>${project.basedir}/../../model</lsps.model.directory>
 	</properties>
 
 	<dependencies>
