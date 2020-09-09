@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>com.whitestein.lsps.default-app</groupId>
+		<artifactId>lsps-app</artifactId>
+		<version>0.1-SNAPSHOT</version>
+	</parent>
+
+	<artifactId>lsps-app-vaadin</artifactId>
+	<name>LSPS: Application: Vaadin App</name>
+	<description>Living Systems Process Suite: Application: Vaadin Application</description>
+
+	<!-- Dependency list -->
+	<dependencies>
+		<dependency>
+			<groupId>javax</groupId>
+			<artifactId>javaee-api</artifactId>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>com.whitestein.lsps.human-processes</groupId>
+			<artifactId>lsps-human-app</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>com.whitestein.lsps.human-processes</groupId>
+			<artifactId>lsps-human-vaadin</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.whitestein.lsps.monitoring</groupId>
+			<artifactId>lsps-monitoring-client</artifactId>
+		</dependency>
+
+		<!-- Required by the LoginUI, as it uses the default Vaadin widgetset only -->
+		<dependency>
+			<groupId>com.vaadin</groupId>
+			<artifactId>vaadin-client-compiled</artifactId>
+			<version>${vaadin.version}</version>
+		</dependency>
+
+		<!-- Lsps application requires either lsps-human-vaadin-v7 or lsps-human-vaadin-v8 dependency. Never
+		 use both of them at the same time.
+
+		- lsps-human-vaadin-v7 - when you want to use deprecated vaadin 7 features		
+		- lsps-human-vaadin-v8 - when you want to exclude vaadin 7 dependencies from classpath		
+		-->
+		<dependency>
+			<groupId>com.whitestein.lsps.human-processes</groupId>
+			<artifactId>lsps-human-vaadin-v7</artifactId>
+			<version>${lsps.version}</version>
+		</dependency>		
+		<!-- <dependency>
+			<groupId>com.whitestein.lsps.human-processes</groupId>
+			<artifactId>lsps-human-vaadin-v8</artifactId>
+			<version>${lsps.version}</version>
+		</dependency> -->		
+						
+	</dependencies>
+
+	<build>
+		<resources>
+			<resource>
+				<directory>src/main/resources</directory>
+				<filtering>true</filtering>
+			</resource>
+		</resources>
+	</build>
+</project>

@@ -1,0 +1,64 @@
+# 
+
+version: '3'
+
+services:
+
+  lsps:
+    image: docker.k8s.whitestein.com/lsps/lsps-app:${project.version}-mysql
+    # build:
+    #   context: .
+    #   dockerfile: Dockerfile.app
+    # command: "ping localhost"
+    ports:
+      - 8080:8080
+      - 8787:8787 # debugging port
+    environment:
+      TZ: Europe/Bratislava
+    depends_on:
+      - db
+
+  db:
+    image: mysql:8.0.18
+    restart: always
+    ports: 
+      - 3306:3306
+    environment:
+      MYSQL_ROOT_PASSWORD: lsps
+      MYSQL_DATABASE: lsps
+      MYSQL_USER: lsps
+      MYSQL_PASSWORD: lsps
+      TZ: Europe/Bratislava
+    command:
+      - '--character-set-server=utf8mb4'
+      - '--collation-server=utf8mb4_unicode_ci'
+      - '--max-allowed-packet=512M'
+      # right to create functions
+      - '--log-bin-trust-function-creators=1'
+    # workaround for mysql8 bug: mbind: Operation not permitted
+    security_opt:
+      - seccomp:unconfined
+    volumes:
+      # Where our data will be persisted
+      - my-db:/var/lib/mysql
+      # healthcheck:
+      #   test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost", "-u", "root", "-p", "lsps"]
+      #   timeout: 20s
+      #   retries: 10
+
+  adminer:
+    image: adminer
+    restart: always
+    ports: 
+      - 9090:8080
+    environment:
+      ADMINER_DEFAULT_SERVER: db
+      ADMINER_DEFAULT_DATABASE: lsps
+      ADMINER_DEFAULT_DB: lsps
+      ADMINER_DESIGN: nette
+    depends_on:
+      - db
+
+# Names our volume
+volumes:
+  my-db:

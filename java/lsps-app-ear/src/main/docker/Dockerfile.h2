@@ -1,0 +1,72 @@
+# Build own Wildfly with java8 (new one uses java11) - copied Dockerfile from Wildfly
+FROM jboss/base-jdk:8
+
+# Set the WILDFLY_VERSION env variable
+ENV WILDFLY_VERSION 15.0.0.Final
+ENV WILDFLY_SHA1 a387f2ebf1b902fc09d9526d28b47027bc9efed9
+ENV JBOSS_HOME /opt/jboss/wildfly
+USER root
+# Add the WildFly distribution to /opt, and make wildfly the owner of the extracted tar content
+# Make sure the distribution is available from a well-known place
+RUN cd $HOME \
+    && curl -O https://download.jboss.org/wildfly/$WILDFLY_VERSION/wildfly-$WILDFLY_VERSION.tar.gz \
+    && sha1sum wildfly-$WILDFLY_VERSION.tar.gz | grep $WILDFLY_SHA1 \
+    && tar xf wildfly-$WILDFLY_VERSION.tar.gz \
+    && mv $HOME/wildfly-$WILDFLY_VERSION $JBOSS_HOME \
+    && rm wildfly-$WILDFLY_VERSION.tar.gz \
+    && chown -R jboss:0 ${JBOSS_HOME} \
+    && chmod -R g+rw ${JBOSS_HOME}
+# Ensure signals are forwarded to the JVM process correctly for graceful shutdown
+ENV LAUNCH_JBOSS_IN_BACKGROUND true
+# USER jboss
+# Expose the ports we're interested in
+EXPOSE 8080
+
+USER root
+
+RUN yum update -y && yum install -y \
+	less \
+	vim-minimal
+
+USER jboss
+
+#Security module
+COPY --chown=jboss security/lsps-security-jboss.jar $JBOSS_HOME/modules/com/whitestein/lsps/security/main/
+COPY --chown=jboss security/lsps-security-jboss-module.xml $JBOSS_HOME/modules/com/whitestein/lsps/security/main/module.xml
+
+COPY --chown=jboss resources/* $JBOSS_HOME/lsps/
+
+ENV LSPS_JDBC_URL jdbc:h2:/opt/jboss/h2/lsps
+ENV LSPS_DB_USER lsps
+ENV LSPS_DB_PASSWORD lsps
+ENV SMTP_HOST localhost
+ENV FROM_EMAIL mail@whitestein.com
+ENV SMTP_SSL false
+ENV JAVA_XMX 4g
+ENV JAVA_MAX_METASPACE_SIZE 1g
+
+# Wildfly configuration files setup
+RUN $JBOSS_HOME/bin/add-user.sh admin admin --silent && \
+	$JBOSS_HOME/bin/jboss-cli.sh --file=$JBOSS_HOME/lsps/init.cli && \
+  $JBOSS_HOME/bin/jboss-cli.sh --file=$JBOSS_HOME/lsps/init-h2.cli && \
+    chmod u+x $JBOSS_HOME/lsps/*.sh && \
+    rm -rf $JBOSS_HOME/standalone/configuration/standalone_xml_history && \
+  echo $'\n\
+JAVA_OPTS="$JAVA_OPTS -Djboss.server.default.config=standalone-full.xml"\n\
+JAVA_OPTS="$JAVA_OPTS -Dorg.jboss.as.logging.per-deployment=false"\n\
+JAVA_OPTS="$JAVA_OPTS -Dorg.eclipse.emf.ecore.EPackage.Registry.INSTANCE=org.eclipse.emf.ecore.impl.EPackageRegistryImpl"\n\
+JAVA_OPTS="$JAVA_OPTS -Dorg.apache.el.parser.COERCE_TO_ZERO=false"\n\
+JAVA_OPTS="$JAVA_OPTS -Dlsps-profiler=true"\n\
+JAVA_OPTS="$JAVA_OPTS -XX:ReservedCodeCacheSize=256m -XX:+UseCodeCacheFlushing"\n\
+JAVA_OPTS="$JAVA_OPTS -Xmx${JAVA_XMX} -XX:MaxMetaspaceSize=${JAVA_MAX_METASPACE_SIZE} -Djava.net.preferIPv4Addresses=true -Djava.net.preferIPv4Stack=true"\n\
+JAVA_OPTS="$JAVA_OPTS -DLSPS_DB_USER=${LSPS_DB_USER} -DLSPS_DB_PASSWORD=${LSPS_DB_PASSWORD} -DLSPS_JDBC_URL=\'${LSPS_JDBC_URL}\'"\n\
+JAVA_OPTS="$JAVA_OPTS -DSMTP_HOST=${SMTP_HOST} -DSMTP_SSL=${SMTP_SSL} -DFROM_EMAIL=${FROM_EMAIL}"\n\
+JAVA_OPTS="$JAVA_OPTS -agentlib:jdwp=transport=dt_socket,address=8787,server=y,suspend=n"\n\
+JAVA_OPTS="$JAVA_OPTS -Dcom.whitestein.lsps.vaadin.ui.debug=true"\n\
+\n\
+export JBOSS_PIDFILE=$JBOSS_HOME/pid\n'\
+>> $JBOSS_HOME/bin/standalone.conf
+
+COPY --chown=jboss *.ear $JBOSS_HOME/standalone/deployments/
+
+CMD ["/opt/jboss/wildfly/lsps/upgrade_and_start.sh"]

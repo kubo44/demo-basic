@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>com.whitestein.lsps.default-app</groupId>
+		<artifactId>lsps-app</artifactId>
+		<version>0.1-SNAPSHOT</version>
+	</parent>
+
+	<artifactId>lsps-app-ejb</artifactId>
+	<name>LSPS: Application: EJB</name>
+	<description>Living Systems Process Suite: EJB</description>
+	<packaging>ejb</packaging>
+
+	<!-- Dependency list -->
+	<dependencies>
+		<dependency>
+			<groupId>javax</groupId>
+			<artifactId>javaee-api</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.whitestein.lsps.tools</groupId>
+			<artifactId>lsps-tools-components</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.whitestein.lsps.tools</groupId>
+			<artifactId>lsps-tools-debugger-server</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.whitestein.lsps.common</groupId>
+			<artifactId>lsps-common-client</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.whitestein.lsps.engine</groupId>
+			<artifactId>lsps-engine-exec</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.whitestein.lsps.human-processes</groupId>
+			<artifactId>lsps-human-exec</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.whitestein.lsps.org-structure</groupId>
+			<artifactId>lsps-os-exec</artifactId>
+			<scope>provided</scope>
+		</dependency>
+				
+		<!--  SLF4J over jdk14 -->
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-jdk14</artifactId>
+		</dependency>
+		
+	</dependencies>
+</project>

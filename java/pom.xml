@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>com.whitestein.lsps.app</groupId>
+		<artifactId>lsps-app-parent</artifactId>
+		<version>0.1-SNAPSHOT</version>
+	</parent>
+
+	<artifactId>lsps-app</artifactId>
+	<name>LSPS: Application</name>
+	<!-- Description is used in the footer of the login screen -->
+	<description>Living Systems Process Application</description>
+	<packaging>pom</packaging>
+	
+	<modules>
+		<module>lsps-app-vaadin</module>
+		<module>lsps-app-vaadin-war</module>
+		<module>lsps-app-ejb</module>
+		<module>lsps-app-ear</module>
+		<module>lsps-app-embedded</module>
+		<module>lsps-app-tester</module>
+		<module>lsps-app-model-exporter</module>
+		<module>lsps-app-db-migration</module>
+  </modules>
+</project>

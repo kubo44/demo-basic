@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	
+	<parent>
+		<groupId>com.whitestein.lsps.default-app</groupId>
+		<artifactId>lsps-app</artifactId>
+		<version>0.1-SNAPSHOT</version>
+	</parent>
+	
+	<artifactId>lsps-app-vaadin-war</artifactId>
+	<name>LSPS: Application: Vaadin WAR</name>
+	<description>Living Systems Process Suite: Application: Vaadin Application WAR</description>
+	<packaging>war</packaging>
+	<!-- Dependency list -->
+	<dependencies>
+		<dependency>
+			<groupId>com.whitestein.lsps.default-app</groupId>
+			<artifactId>lsps-app-vaadin</artifactId>
+			<version>0.1-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>com.whitestein.lsps.common</groupId>
+			<artifactId>lsps-common-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<!-- uncomment when compiling widgetsets -->
+<!--
+		<dependency>
+			<groupId>com.vaadin</groupId>
+			<artifactId>vaadin-client-compiler</artifactId>
+			<version>${vaadin.version}</version>
+			<scope>provided</scope>
+		</dependency>
+
+ 		<dependency>
+ 		        <groupId>com.vaadin</groupId>
+ 		        <artifactId>vaadin-compatibility-server</artifactId>
+ 		        <version>${vaadin.version}</version>
+ 		        <exclusions>
+ 		                <exclusion>
+ 		                        <groupId>commons-logging</groupId>
+ 		                        <artifactId>commons-logging</artifactId>
+ 		                </exclusion>
+ 		        </exclusions>
+ 		</dependency>
+ 		<dependency>
+ 		        <groupId>com.vaadin</groupId>
+ 		        <artifactId>vaadin-compatibility-client</artifactId>
+ 		        <version>${vaadin.version}</version>
+ 		        <scope>provided</scope>
+ 		</dependency>
+-->
+
+	</dependencies>
+
+	<build>
+		<plugins>
+			<!-- Set app.buildTimestamp to be used e.g. in the login.jsp -->
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>build-helper-maven-plugin</artifactId>
+				<version>3.0.0</version>
+				<executions>
+					<execution>
+						<id>timestamp-property</id>
+						<goals>
+							<goal>timestamp-property</goal>
+						</goals>
+						<configuration>
+							<name>app.buildTimestamp</name>
+							<pattern>dd-MM-yyyy HH:mm</pattern>
+							<locale>en_US</locale>
+							<timeZone>Europe/Zurich</timeZone>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<artifactId>maven-war-plugin</artifactId>
+                <version>2.3</version>
+				<configuration>
+                    <packagingExcludes>WEB-INF/classes/VAADIN/gwt-unitCache/**,
+						WEB-INF/classes/VAADIN/widgetsets/WEB-INF/**,
+						WEB-INF/lib/*.jar</packagingExcludes>
+					<webResources>
+						<resource>
+							<directory>${project.basedir}/src/main/webapp</directory>
+							<filtering>true</filtering>
+							<includes>
+								<include>login.jsp</include>
+							</includes>
+						</resource>
+					</webResources>
+				</configuration>
+			</plugin>
+			<!-- You can find documentation for the vaadin-maven-plugin here: http://mojo.codehaus.org/gwt-maven-plugin/compile-mojo.html
+			Please read https://vaadin.com/forum#!/thread/5306184 for more information -->
+			<plugin>
+				<groupId>com.vaadin</groupId>
+				<artifactId>vaadin-maven-plugin</artifactId>
+				<version>${vaadin.version}</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>update-theme</goal>
+							<goal>compile-theme</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			
+			<!-- If you wish to make use of additional Vaadin components which require GWT module recompilation, please update the above vaadin-maven-plugin
+			configuration according to the example below. Afterwards, add the component as a maven dependency to the lsps-app-vaadin project.
+			See app-vaadin/.../MyWidgetSet.gwt.xml file for more details.
+
+			You can find the documentation on this plugin here: https://gwt-maven-plugin.github.io/gwt-maven-plugin/compile-mojo.html
+			 -->
+<!--
+			<plugin>
+				<groupId>com.vaadin</groupId>
+				<artifactId>vaadin-maven-plugin</artifactId>
+				<version>${vaadin.version}</version>
+
+				<configuration>
+					<modules>
+						<module>com.whitestein.lsps.vaadin.webapp.MyWidgetSet</module>
+					</modules>
+					<inplace>true</inplace>
+					<deploy>${project.build.directory}/symbolMaps/WEB-INF/deploy</deploy>
+					<extraJvmArgs>-Xmx1024M -Xss1024k</extraJvmArgs>
+					<noServer>true</noServer>
+					<compileReport>true</compileReport>
+					<style>OBF</style>
+					<strict>true</strict>
+					<persistentunitcache>false</persistentunitcache>
+				</configuration>
+
+				<executions>
+					<execution>
+						<id>update-widgetset</id>
+						<goals>
+							<goal>update-widgetset</goal>
+							<goal>compile</goal>
+						</goals>
+						<configuration>
+                            <warSourceDirectory>src/main/webapp/VAADIN/widgetsets</warSourceDirectory>
+						</configuration>
+					</execution>
+					<execution>
+						<id>compile-theme</id>
+						<phase>generate-sources</phase>
+						<goals>
+							<goal>compile-theme</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+-->
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-clean-plugin</artifactId>
+				<version>2.6.1</version>
+				<!-- Clean up also any pre-compiled themes -->
+				<configuration>
+					<filesets>
+						<fileset>
+							<directory>src/main/webapp/VAADIN/themes</directory>
+							<includes>
+								<include>**/styles.css</include>
+								<include>**/styles.scss.cache</include>
+							</includes>
+						</fileset>
+						<fileset>
+							<directory>src/main/webapp/VAADIN/widgetsets</directory>
+						</fileset>
+					</filesets>
+				</configuration>
+			</plugin>
+			<plugin>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<configuration>
+					<!-- Skip the normal tests, we'll run them in the integration-test phase -->
+					<skip>true</skip>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+</project>

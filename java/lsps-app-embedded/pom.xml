@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>com.whitestein.lsps.default-app</groupId>
+		<artifactId>lsps-app</artifactId>
+		<version>0.1-SNAPSHOT</version>
+	</parent>
+
+	<artifactId>lsps-app-embedded</artifactId>
+	<name>LSPS: Application: Embedded Launchers</name>
+	<description>Living Systems Process Suite: Application Embedded
+		Launchers</description>
+	<packaging>jar</packaging>
+
+	<dependencies>
+
+		<!-- Embedded TomEE launcher. Has to be declared as first dependency
+         to ensure (otherwise provided) servlet-api from Tomcat is used -->
+		<dependency>
+			<groupId>org.apache.tomee</groupId>
+			<artifactId>tomee-embedded</artifactId>
+			<exclusions>
+				<exclusion>
+					<groupId>commons-beanutils</groupId>
+					<artifactId>commons-beanutils-core</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.tomee</groupId>
+			<artifactId>tomee-webservices</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.tomee</groupId>
+			<artifactId>tomee-jaxrs</artifactId>
+		</dependency>
+
+
+		<!--  There's some weird dependency to obsolete ecj in tomee-embedded artifact, override it with Java8 compatible one -->
+		<dependency>
+			<groupId>org.eclipse.jdt.core.compiler</groupId>
+			<artifactId>ecj</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>com.whitestein.lsps.tools</groupId>
+			<artifactId>lsps-tools-launcher</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>com.whitestein.lsps.default-app</groupId>
+			<artifactId>lsps-app-ejb</artifactId>
+			<version>0.1-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>com.whitestein.lsps.default-app</groupId>
+			<artifactId>lsps-app-vaadin</artifactId>
+			<version>0.1-SNAPSHOT</version>
+		</dependency>
+
+		<!-- Copy all required WARs to target/dependency - this is required for sdk in order to be functional -->
+		<dependency>
+			<groupId>com.whitestein.lsps.webconsole</groupId>
+			<artifactId>lsps-webconsole-vaadin-war</artifactId>
+			<type>war</type>
+		</dependency>
+		<dependency>
+			<groupId>com.whitestein.lsps.human-processes</groupId>
+			<artifactId>lsps-human-ws</artifactId>
+			<type>war</type>
+		</dependency>
+		<dependency>
+			<groupId>com.whitestein.lsps.engine</groupId>
+			<artifactId>lsps-engine-ws</artifactId>
+			<type>war</type>
+		</dependency>
+		
+		<dependency>
+			<groupId>com.whitestein.lsps.org-structure</groupId>
+			<artifactId>lsps-os-ws</artifactId>
+			<type>war</type>
+		</dependency>
+		
+		<dependency>
+			<groupId>com.whitestein.lsps.monitoring</groupId>
+			<artifactId>lsps-monitoring-ws</artifactId>
+			<type>war</type>
+		</dependency>
+
+	</dependencies>
+
+	<build>
+		<plugins>
+			<!-- Copy all required WARs to target/dependency - this is required for sdk in order to be functional -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-dependency-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>copy-wars</id>
+						<phase>process-resources</phase>
+						<goals>
+							<goal>copy-dependencies</goal>
+						</goals>
+						<configuration>
+							<includeTypes>war</includeTypes>
+							<stripVersion>true</stripVersion>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+</project>

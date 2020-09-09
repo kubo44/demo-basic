@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project>
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>com.whitestein.lsps.default-app</groupId>
+		<artifactId>lsps-app</artifactId>
+		<version>0.1-SNAPSHOT</version>
+	</parent>
+
+	<artifactId>model</artifactId>
+	<name>LSPS: Application: Model</name>
+	<description>Living Systems Process Suite: Model</description>
+	<packaging>pom</packaging>
+
+	<build>
+		<plugins>
+			<!-- generate correct .project file on eclipse:eclipse -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-eclipse-plugin</artifactId>
+				<version>2.10</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>eclipse</goal>
+						</goals>
+						<phase>install</phase>
+					</execution>
+				</executions>
+				<configuration>
+					<!-- https://issues.apache.org/jira/browse/MECLIPSE-94?focusedCommentId=14434719&page=com.atlassian.jira.plugin.system.issuetabpanels%3Acomment-tabpanel#comment-14434719 -->
+					<eclipseProjectDir>..</eclipseProjectDir>
+					<buildcommands>
+						<buildcommand>com.whitestein.lsps.modeler.ui.gobpmnBuilder</buildcommand>
+					</buildcommands>
+					<projectnatures>
+						<projectnature>com.whitestein.lsps.modeler.ui.gobpmnNature</projectnature>
+					</projectnatures>
+				</configuration>
+			</plugin>
+
+		</plugins>
+	</build>
+</project>
